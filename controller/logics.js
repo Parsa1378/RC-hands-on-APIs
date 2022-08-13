@@ -1,25 +1,41 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+let dict = {};
 
 const login = (req, res) => {
     //todo:
     //input:phone output:success
-    const phoneNumber = req.body;
+    let { phoneNumber } = req.body;
     if (phoneNumber) {
-        res.status(200).json(phoneNumber);
+        let code = Math.floor(Math.random() * 10000);
+        dict[phoneNumber] = code;
+        //dict.push(newObj);
+        res.status(200).json({ phoneNumber, code });
+    } else {
+        res.status(400).json({ msg: 'phone number missing' });
     }
-    res.status(400).json({ msg: 'phone number missing' });
+
 };
 
 const confirm = (req, res) => {
     //todo:
+    //input: req.body=phonenumber
     //output:toke
-    const code = '767654';
-    res.status(200).json({ token: generateAccessToken(code) });
+    let { phoneNumber, code } = req.body;
+    if (dict[phoneNumber] === code) {
+        return res.send({ 'status': 200, 'token': generateAccessToken(code) });
+    }
+    // dict.forEach((obj) => {
+    //     if (obj.phone === phoneNumber && obj.code === code) {
+    //         return res.send({ 'status': 200, 'token': generateAccessToken(code) });
+    //     }
+    // });
+
+    res.status(404).json({ msg: 'no matching found with this phoneNumber' });
 };
 
 const generateAccessToken = (code) => {
-    return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: '100000s' });
+    return jwt.sign(code, process.env.TOKEN_SECRET, {});
 }
 
 
