@@ -3,9 +3,11 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 8080;
 const routes = require('./router/router');
+const db = require('./model/model');
 
 
 app.use(express.json());
+
 
 app.use('/api/v1', routes);
 
@@ -19,4 +21,5 @@ const start = () => {
     }
 };
 
-start();
+//start();
+db();
