@@ -5,3 +5,5 @@ const { login, confirm } = require('../controller/logics');
 
 router.route('/login').post(login);
 router.route('/confirm').post(confirm);
+
+module.exports = router;
